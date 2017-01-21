@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Custom report.-->
+<openerp>
+    <data>
+
+       <!-- <template id="report_header_custom" inherit_id="report.external_layout_header">
+            <xpath expr="//div[@class='header']" position="replace">
+                <div class="header">
+                    <img class="img img-responsive" src="/machines/static/src/img/header.jpg"/>
+
+
+                </div>
+            </xpath>
+        </template>-->
+    </data>
+</openerp>

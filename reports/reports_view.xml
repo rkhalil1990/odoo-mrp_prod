@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- QWeb Reports -->
+        <!-- NAME & FILE_NAME should be the same -->
+        <report
+                id="mrp_prod_record"
+                model="mrp.production.record"
+                report_type="qweb-pdf"
+                string=" Daily Records"
+                name="mrp_prod.mrp_prod_record_qweb"
+                file="mrp_prod.mrp_prod_record_qweb"
+        />
+    </data>
+</openerp>
