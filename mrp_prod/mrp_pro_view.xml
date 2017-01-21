@@ -1,0 +1,426 @@
+<openerp>
+    <data>
+
+
+        <record id="department_record_action" model="ir.actions.act_window">
+            <field name="name">MNF Department Production Records</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.production.record</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('record_dep', '=', active_id)]</field>
+            <field name="context">{'default_record_dep': active_id}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    <!-- Add Text Here -->
+                </p>
+                <p>
+                    <!-- More details about what a user can do with this object will be OK -->
+                </p>
+            </field>
+        </record>
+
+
+        <record id="workcenter_record_action" model="ir.actions.act_window">
+            <field name="name">Work Center Production Records</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.production.record</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('workcenter_id', '=', active_id)]</field>
+            <field name="context">{'default_workcenter_id': active_id}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    <!-- Add Text Here -->
+                </p>
+                <p>
+                    <!-- More details about what a user can do with this object will be OK -->
+                </p>
+            </field>
+        </record>
+
+
+        <!-- Inherit mrp_workcenter Form View  -->
+<!--
+        <record id="mrp_workcenter_form_inherited" model="ir.ui.view">
+            <field name="name">mrp.workcenter.form.inherited</field>
+            <field name="model">mrp.workcenter</field>
+            <field name="inherit_id" ref="mrp.mrp_workcenter_view"/>
+            <field name="arch" type="xml">
+                <form string="Work Center" position="inside">
+
+
+                    <div class="oe_right oe_button_box" style="width: 300px;" name="button_box_child">
+                    &lt;!&ndash; Put here related buttons &ndash;&gt;
+                    <button class="oe_inline oe_stat_button" string="Dialy Records"
+                            name="%(mrp_prod.workcenter_record_action)d" type="action" icon="fa-folder-open">
+
+                    </button>
+                    </div>
+
+                    <notebook>
+                        <page string="General Information" position="after">
+                            <page string="Production Records">
+                                <field name="record_ids" nolabel="1"/>
+                            </page>
+
+                        </page>
+
+
+                    </notebook>
+
+                </form>
+
+
+            </field>
+        </record>
+-->
+                 <record id="mrp_workcenter_form_inherited" model="ir.ui.view">
+                    <field name="name">mrp.workcenter.form.inherited</field>
+                    <field name="model">mrp.workcenter</field>
+                    <field name="inherit_id" ref="mrp.mrp_workcenter_view"/>
+                    <field name="arch" type="xml">
+                        <form string="Work Center" position="replace">
+                            <sheet name="Work Center">
+                                <div class="oe_right oe_button_box" style="width: 300px;" name="button_box_child">
+                                    <!-- Put here related buttons -->
+                                    <button class="oe_inline oe_stat_button" string="Dialy Records"
+                                            name="%(mrp_prod.workcenter_record_action)d" type="action" icon="fa-folder-open">
+
+                                    </button>
+                                </div>
+
+
+                                <div class="oe_left" style="width: 500px;">
+                                    <group col="4">
+                                        <group>
+                                            <field name="name"/>
+                                            <field name="resource_type"/>
+                                            <field name="calendar_id" widget="selection"/>
+                                        </group>
+                                        <group>
+                                            <field name="code"/>
+                                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                            <field name="active"/>
+                                            <field name="workcenter_dep"/>
+                                        </group>
+                                    </group>
+                                </div>
+                                <notebook>
+                                    <page string="General Information">
+                                        <group>
+                                            <group string="Capacity Information">
+                                                <field name="time_efficiency"/>
+                                                <field name="capacity_per_cycle"/>
+                                                <field name="time_cycle" widget="float_time"/>
+                                                <field name="time_start" widget="float_time"/>
+                                                <field name="time_stop" widget="float_time"/>
+                                            </group>
+                                            <group string="Costing Information">
+                                                <field name="product_id" on_change="on_change_product_cost(product_id)"/>
+                                                <field name="costs_hour"/>
+                                                <field name="costs_hour_account_id"
+                                                       groups="analytic.group_analytic_accounting"/>
+                                                <field name="costs_cycle"/>
+                                                <field name="costs_cycle_account_id"
+                                                       groups="analytic.group_analytic_accounting"/>
+                                                <field name="costs_journal_id"
+                                                       attrs="{'required':['|',('costs_hour_account_id', '=', True),('costs_cycle_account_id', '=', True)]}"
+                                                       groups="analytic.group_analytic_accounting"/>
+                                                <field name="costs_general_account_id"
+                                                       attrs="{ 'required':['|',('costs_cycle_account_id', '=', True),('costs_hour_account_id', '=', True)]}"
+                                                       groups="analytic.group_analytic_accounting"/>
+                                            </group>
+                                        </group>
+                                        <label for="note"/>
+                                        <field name="note"/>
+                                    </page>
+
+                                    <page string="Production Records">
+                                        <field name="record_ids" nolabel="1"/>
+                                    </page>
+
+
+                                </notebook>
+
+                            </sheet>
+
+                        </form>
+
+                    </field>
+                </record>
+
+
+        <record id="mrp_department_form_view" model="ir.ui.view">
+            <field name="name">MNF Department from view</field>
+            <field name="model">mrp.dep</field>
+            <field name="arch" type="xml">
+                <form string="">
+                    <sheet>
+                        <div class="oe_right oe_button_box" style="width: 300px;" name="button_box_child">
+                            <!-- Put here related buttons -->
+                            <button class="oe_inline oe_stat_button" string="Dialy Records"
+                                    name="%(mrp_prod.department_record_action)d" type="action" icon="fa-folder-open">
+                            </button>
+                        </div>
+                        <div class="oe_left" style="width: 500px;">
+                            <group>
+                                <field name="name"/>
+                                <field name="employee_ids" widget="many2many_tags"/>
+
+
+                            </group>
+                        </div>
+                        <notebook>
+                            <page string="Production records">
+                                <field name="record_ids" nolabel="1"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="mrp_department_tree_view" model="ir.ui.view">
+            <field name="name">MNF Departmentt from view</field>
+            <field name="model">mrp.dep</field>
+            <field name="arch" type="xml">
+                <tree string="">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_employee_record_action" model="ir.actions.act_window">
+            <field name="name">Production Records</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.production.record</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('employee_id', '=', active_id)]</field>
+            <field name="context">{'default_employee_id': active_id,}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    <!-- Add Text Here -->
+                </p>
+                <p>
+                    <!-- More details about what a user can do with this object will be OK -->
+                </p>
+            </field>
+        </record>
+
+
+        <record id="hr_employee_form_inheit" model="ir.ui.view">
+            <field name="name">hr.employee.form.inheit</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <div class="oe_right oe_button_box" style="width: 300px;" name="button_box_child">
+                        <!-- Put here related buttons -->
+                        <button class="oe_inline oe_stat_button" string="Dialy Records"
+                                name="%(mrp_prod.hr_employee_record_action)d" type="action" icon="fa-folder-open">
+
+                        </button>
+                    </div>
+                </div>
+                <page string="HR Settings" position="after">
+                    <page string="production records">
+                        <field name="records_ids"/>
+                    </page>
+                </page>
+                <!-- <div  name="buttons" position="inside">
+
+
+                              </div>  -->
+
+
+            </field>
+        </record>
+
+
+        <record id="hr_workorder_record_action" model="ir.actions.act_window">
+            <field name="name">Workorder Production Records</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.production.record</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('workorder_id', '=', active_id)]</field>
+            <field name="context">{'default_workorder_id': active_id, 'default_workcenter_id': workcenter_id }</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    <!-- Add Text Here -->
+                </p>
+                <p>
+                    <!-- More details about what a user can do with this object will be OK -->
+                </p>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="mrp_production_workcenter_form_view_inherited">
+            <field name="name">mrp.production.workcenter.form</field>
+            <field name="model">mrp.production.workcenter.line</field>
+            <field name="inherit_id" ref="mrp_operations.mrp_production_workcenter_form_view_inherit"/>
+            <field name="arch" type="xml">
+
+
+                <sheet string="Work Orders" position="replace">
+                    <sheet string="Work Orders">
+                        <div class="oe_right oe_button_box" style="width: 300px;" name="buttons">
+                            <button class="oe_inline oe_stat_button" string="Dialy Records"
+                                    name="%(mrp_prod.hr_workorder_record_action)d" type="action" icon="fa-folder-open"
+                                    attrs="{'invisible':[('state','not in',['startworking'])]}"
+                                    context="{'workcenter_id': workcenter_id}"/>
+                        </div>
+                        <div class="oe_left" style="width: 500px;">
+                            <group col="2">
+                                <field colspan="1" name="name"/>
+                                <field name="workcenter_id"/>
+                                <field name="production_id" on_change="onchange_production_id(production_id)"/>
+                                <field name="production_state"/>
+                                <field name="sequence"/>
+                                <field name="production_coff"/>
+                                <field name="rem_qty" readonly="1"/>
+
+                            </group>
+                        </div>
+                        <notebook>
+                            <page string="Information">
+                                <group>
+                                    <group string="Planned Date">
+                                        <field name="date_planned"/>
+                                        <field name="date_planned_end"/>
+                                    </group>
+
+                                    <group string="Duration">
+                                        <field name="cycle"/>
+                                        <field name="hour" widget="float_time"/>
+                                    </group>
+                                    <group string="Actual Production Date">
+                                        <field name="date_start"/>
+                                        <field name="date_finished"/>
+                                        <field name="delay" widget="float_time"/>
+                                    </group>
+                                    <group string="Product to Produce">
+                                        <field name="product"/>
+                                        <field name="qty"/>
+                                        <field name="uom" widget="selection"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </sheet>
+
+
+            </field>
+        </record>
+
+
+        <record id="mrp_production_record_action" model="ir.actions.act_window">
+            <field name="name">Production Records</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.production.record</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    <!-- Add Text Here -->
+                </p>
+                <p>
+                    <!-- More details about what a user can do with this object will be OK -->
+                </p>
+            </field>
+        </record>
+
+
+        <record id="mrp_production_record_form_view" model="ir.ui.view">
+            <field name="name">mrp.prod.production.record.form.view</field>
+            <field name="model">mrp.production.record</field>
+            <field name="arch" type="xml">
+                <form string="">
+                    <sheet>
+                        <group>
+
+                            <field name="name"/>
+                            <field name="employee_id"/>
+                            <field name="mnforder_id" domain="[('state', '=', 'in_production')]"/>
+                            <field name="workorder_id" domain="[('state', '=', 'startworking')]"/>
+                            <field name="workcenter_id"/>
+                            <field name="record_dep"/>
+                            <field name="rem_qty" readonly="1"/>
+                            <field name="pro_qty"/>
+                            <field name="time_taken" widget="float_time"/>
+                            <field name="pro_ef" readonly="1" widget="progressbar"/>
+                            <!--<button name="print_record" string="test" type="object" class="btn-primary"/>-->
+
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="mrp_production_record_tree_view" model="ir.ui.view">
+            <field name="name">mrp.prod.production.record.tree.view</field>
+            <field name="model">mrp.production.record</field>
+            <field name="arch" type="xml">
+                <tree string="">
+                    <field name="name"/>
+                    <field name="employee_id"/>
+                    <field name="workorder_id"/>
+                    <field name="workcenter_id"/>
+                    <field name="pro_qty" sum="Tolal Pieces"/>
+                    <field name="record_dep"/>
+                    <field name="time_taken" widget="float_time"/>
+                    <field name="pro_ef" readonly="1" avg="total EFF"/>
+
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="mrp_department_menu_action" model="ir.actions.act_window">
+            <field name="name">Manufacturing Departments</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.dep</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    <!-- Add Text Here -->
+                </p>
+                <p>
+                    <!-- More details about what a user can do with this object will be OK -->
+                </p>
+            </field>
+        </record>
+
+
+        <!-- Inherit Form View to Modify it -->
+        <record id="mrp_routing_form_inherited" model="ir.ui.view">
+            <field name="name">mrp.routing.form.inherited</field>
+            <field name="model">mrp.routing</field>
+            <field name="inherit_id" ref="mrp.mrp_routing_form_view"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='workcenter_lines']" position="replace">
+                    <field name="workcenter_lines" string="Operation">
+                        <tree>
+                            <field name="sequence"/>
+                            <field name="name"/>
+                            <field name="workcenter_id"/>
+                            <field name="cycle_nbr"/>
+                            <field name="hour_nbr" widget="float_time"/>
+                        </tree>
+                    </field>
+
+                </xpath>
+
+            </field>
+        </record>
+
+
+        <menuitem id="mrp_production_record_action_menu" name="" parent="mrp.menu_mrp_configuration"
+                  action="mrp_production_record_action" sequence="25"/>
+
+        <!-- This Menu Item must have a parent and an action -->
+        <menuitem id="mrp_departmet_menu" name="" parent="mrp.menu_mrp_configuration"
+                  action="mrp_department_menu_action" sequence="25"/>
+    </data>
+</openerp>

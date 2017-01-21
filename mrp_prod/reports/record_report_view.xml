@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Custom report.-->
+<openerp>
+    <data>mrp_prod_record
+
+
+        <template id="mrp_prod_record_qweb">
+            <t t-call="report.html_container">
+                <t t-call="report.external_layout">
+                    <div class="page">
+
+                        <div class="row">
+                            <div class="col-xs-12"
+                                 style="background-color:#568eff;border: 1px solid #568eff;color:#ffffff;">
+                                <h3>Production Report</h3>
+                            </div>
+                        </div>
+                        <br/>
+
+
+                        <t t-foreach="dep_ids" t-as="d">
+                            <div class="row mt32">
+                                <div class="col-xs-12" style="border:1px solid #568eff;">
+
+                                    <div class="text-center">
+                                        <strong>Department:</strong>
+                                        <span t-esc="d.name"/>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            <t t-foreach="emp_ids" t-as="e">
+
+                                <t t-set="emp_exist" t-value="False"/>
+                                <t t-foreach="docs" t-as="do">
+                                    <t t-if="do.record_dep ==d">
+                                        <t t-if="do.employee_id ==e">
+                                            <t t-set="emp_exist" t-value="True"/>
+
+                                        </t>
+                                    </t>
+                                </t>
+
+                                <t t-if="emp_exist == True">
+
+                                    <div class="row mt32">
+                                        <div class="col-xs-12" style="border:1px solid #568eff;">
+                                            <strong>Employee Name :</strong>
+                                            <span t-esc="e.name"/>
+                                        </div>
+                                    </div>
+                                    <div class="row"
+                                         style="background-color:#568eff;border: 1px solid #568eff;color:#ffffff;">
+                                        <div class="col-xs-1">NO.</div>
+                                        <div class="col-xs-2">Date</div>
+                                        <div class="col-xs-3">PRODUCT</div>
+                                        <div class="col-xs-2">WORKCENTER</div>
+                                        <div class="col-xs-1">QTY</div>
+                                        <div class="col-xs-1">TIME</div>
+                                        <div class="col-xs-2">EFF %</div>
+
+                                    </div>
+                                    <t t-set="no" t-value="0"/>
+                                    <t t-set="tot_qty" t-value="0"/>
+                                    <t t-set="tot_t" t-value="0"/>
+                                    <t t-set="tot_ef" t-value="0.0"/>
+
+                                    <t t-foreach="docs" t-as="o">
+
+
+                                        <t t-if="o.record_dep ==d">
+                                            <t t-if="o.employee_id ==e">
+
+                                                <t t-set="no" t-value="no + 1"/>
+                                                <div class="row">
+                                                    <div class="col-xs-1" style="border-left:1px solid #568eff;">
+                                                        <span t-esc="no"/>
+                                                    </div>
+                                                    <div class="col-xs-2" style="border-left:1px solid #568eff;">
+                                                        <span t-esc="o.name"/>
+                                                    </div>
+                                                    <div class="col-xs-3" style="border-left:1px solid #568eff;">
+                                                        <span t-esc="o.workorder_id.product.name"/>
+                                                    </div>
+                                                    <div class="col-xs-2" style="border-left:1px solid #568eff;">
+                                                        <span t-esc="o.workcenter_id.name"/>
+                                                    </div>
+                                                    <div class="col-xs-1" style="border-left:1px solid #568eff;">
+                                                        <span t-esc="o.pro_qty"/>
+                                                    </div>
+                                                    <div class="col-xs-1"
+                                                         style="border-left:1px solid #568eff;border-right:1px solid #568eff;">
+                                                        <span t-esc="o.time_taken"/>
+                                                    </div>
+                                                    <div class="col-xs-2"
+                                                         style="border-left:1px solid #568eff;border-right:1px solid #568eff;">
+                                                        <span t-esc="'%.2f'%o.pro_ef"/>
+
+
+                                                    </div>
+                                                    <t t-set="tot_qty" t-value="tot_qty+o.pro_qty"/>
+                                                    <t t-set="tot_t" t-value="tot_t+o.time_taken"/>
+                                                    <t t-set="tot_ef" t-value="tot_ef+o.pro_ef"/>
+                                                </div>
+
+                                                <!-- FOURTH ROW -->
+
+
+                                                <!--<p t-esc="o.name"/>-->
+
+                                            </t>
+
+
+                                        </t>
+
+                                    </t>
+                                    <div class="row">
+                                        <div class="col-xs-8" style="text-align:left;border: 1px solid #568eff;">
+                                            <strong>Total:</strong>
+                                        </div>
+                                        <div class="col-xs-1"
+                                             style="text-align:center;border: 1px solid #568eff;border-left:0px;">
+                                            <strong>
+                                                <span t-esc="tot_qty"/>
+                                            </strong>
+                                        </div>
+                                        <div class="col-xs-1"
+                                             style="text-align:center;border: 1px solid #568eff;border-left:0px;">
+                                            <strong>
+                                                <span t-esc="tot_t"/>
+                                            </strong>
+                                        </div>
+                                        <div class="col-xs-2"
+                                             style="text-align:center;border: 1px solid #568eff;border-left:0px;">
+                                            <strong><span t-esc="'%.2f'%(tot_ef/no)"/>
+
+                                            </strong>
+                                        </div>
+                                    </div>
+
+                                </t>
+
+
+                            </t>
+
+                        </t>
+
+
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</openerp>
