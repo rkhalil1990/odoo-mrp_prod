@@ -6,11 +6,11 @@
        """,
 
     'description': """
-        with this module you can add daily records for the workcents and employees abd trace them then calculation work efficiency
+        with this module you can add daily records for the workcenters and employees and trace them then calculation work efficiency
     """,
 
     'author': "Ramadan Khalil",
-    'website': "www.el-dahan.com",
+    'website': "",
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/master/openerp/addons/base/module/module_data.xml
